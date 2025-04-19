@@ -12,12 +12,10 @@ def integrate_los(start_pt: np.ndarray, end_pt: np.ndarray, R: np.ndarray, Z: np
 
     Given a grid consisting of rectangles, and emission for each rectangle, this function calculates the line-integrated emission along the specified path. Supports 3D lines (not just top down)
 
-    returns: float, np.ndarray
+    returns: float
     return params:
     total_integral: float
-    res_arr: np.ndarray
     '''
-
     # 1. Parametrize the line
     x0, y0, z0 = start_pt
     x1, y1, z1 = end_pt
@@ -47,6 +45,7 @@ def integrate_los(start_pt: np.ndarray, end_pt: np.ndarray, R: np.ndarray, Z: np
     for i in range(len(ds)):
         Ri = R_points[i]
         Zi = Z_points[i]
+        # Iterate over each cell
         for j in range(len(emission)):
             if Rmin[j] <= Ri <= Rmax[j] and Zmin[j] <= Zi <= Zmax[j]:
                 total_integral += emission[j] * ds[i]
@@ -55,6 +54,4 @@ def integrate_los(start_pt: np.ndarray, end_pt: np.ndarray, R: np.ndarray, Z: np
     return total_integral
 
 
-
-import numpy as np
 
