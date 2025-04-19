@@ -25,6 +25,7 @@ def integrate_los(start_pt: np.ndarray, end_pt: np.ndarray, R: np.ndarray, Z: np
     z = z0 + t * (z1 - z0)
 
     # 2. Convert to cylindrical coordinates
+    # Note that for a top-down LOS, you may input the start and end points as (0, R, Z) or (R, 0, Z)
     R_points = np.sqrt(x**2 + y**2)
     Z_points = z
 
@@ -34,13 +35,13 @@ def integrate_los(start_pt: np.ndarray, end_pt: np.ndarray, R: np.ndarray, Z: np
     dz = np.diff(z)
     ds = np.sqrt(dx**2 + dy**2 + dz**2)  # Lengths between sample points
 
-    # 4. Precompute bounding boxes for each (R,Z) zone
+    # 4. Precompute bounding boxes for each (R,Z) cell
     Rmin = np.min(R, axis=1)
     Rmax = np.max(R, axis=1)
     Zmin = np.min(Z, axis=1)
     Zmax = np.max(Z, axis=1)
 
-    # 5. For each segment, determine which zone it's in
+    # 5. For each segment, determine which cell it's in
     total_integral = 0.0
     for i in range(len(ds)):
         Ri = R_points[i]
@@ -49,7 +50,7 @@ def integrate_los(start_pt: np.ndarray, end_pt: np.ndarray, R: np.ndarray, Z: np
         for j in range(len(emission)):
             if Rmin[j] <= Ri <= Rmax[j] and Zmin[j] <= Zi <= Zmax[j]:
                 total_integral += emission[j] * ds[i]
-                break  # Each point can only belong to one zone
+                break  # Each point can only belong to one cell
     
     return total_integral
 
